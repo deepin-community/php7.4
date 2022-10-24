@@ -1,0 +1,63 @@
+Description: 
+   * Add openssl3.0 and icu71 support
+Author: Angie.J <doucaixia@uniontech.com>
+Last-Update: 2022-08-02
+
+---
+
+--- php7.4-7.4.21.orig/ext/intl/breakiterator/codepointiterator_internal.cpp
++++ php7.4-7.4.21/ext/intl/breakiterator/codepointiterator_internal.cpp
+@@ -74,8 +74,11 @@ CodePointBreakIterator::~CodePointBreakI
+ 	}
+ 	clearCurrentCharIter();
+ }
+-
++#if U_ICU_VERSION_MAJOR_NUM >= 70
++bool CodePointBreakIterator::operator==(const BreakIterator& that) const
++#else
+ UBool CodePointBreakIterator::operator==(const BreakIterator& that) const
++#endif
+ {
+ 	if (typeid(*this) != typeid(that)) {
+ 		return FALSE;
+--- php7.4-7.4.21.orig/ext/intl/breakiterator/codepointiterator_internal.h
++++ php7.4-7.4.21/ext/intl/breakiterator/codepointiterator_internal.h
+@@ -38,9 +38,11 @@ namespace PHP {
+ 		CodePointBreakIterator& operator=(const CodePointBreakIterator& that);
+ 
+ 		virtual ~CodePointBreakIterator();
+-
++#if U_ICU_VERSION_MAJOR_NUM >= 70
++		virtual bool operator==(const BreakIterator& that) const;
++#else
+ 		virtual UBool operator==(const BreakIterator& that) const;
+-
++#endif
+ 		virtual CodePointBreakIterator* clone(void) const;
+ 
+ 		virtual UClassID getDynamicClassID(void) const;
+--- php7.4-7.4.21.orig/ext/openssl/openssl.c
++++ php7.4-7.4.21/ext/openssl/openssl.c
+@@ -56,6 +56,12 @@
+ #include <openssl/ssl.h>
+ #include <openssl/pkcs12.h>
+ 
++#if PHP_OPENSSL_API_VERSION >= 0x30000
++#include <openssl/core_names.h>
++#include <openssl/param_build.h>
++#endif
++
++
+ /* Common */
+ #include <time.h>
+ 
+@@ -1517,7 +1523,9 @@ PHP_MINIT_FUNCTION(openssl)
+ 	REGISTER_LONG_CONSTANT("PKCS7_NOSIGS", PKCS7_NOSIGS, CONST_CS|CONST_PERSISTENT);
+ 
+ 	REGISTER_LONG_CONSTANT("OPENSSL_PKCS1_PADDING", RSA_PKCS1_PADDING, CONST_CS|CONST_PERSISTENT);
++#ifdef RSA_SSLV23_PADDING
+ 	REGISTER_LONG_CONSTANT("OPENSSL_SSLV23_PADDING", RSA_SSLV23_PADDING, CONST_CS|CONST_PERSISTENT);
++#endif
+ 	REGISTER_LONG_CONSTANT("OPENSSL_NO_PADDING", RSA_NO_PADDING, CONST_CS|CONST_PERSISTENT);
+ 	REGISTER_LONG_CONSTANT("OPENSSL_PKCS1_OAEP_PADDING", RSA_PKCS1_OAEP_PADDING, CONST_CS|CONST_PERSISTENT);
+ 
