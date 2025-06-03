@@ -1,0 +1,61 @@
+diff --git a/Zend/zend_portability.h b/Zend/zend_portability.h
+index 58c42a28..7c1f748c 100644
+--- a/Zend/zend_portability.h
++++ b/Zend/zend_portability.h
+@@ -448,7 +448,7 @@ static zend_always_inline double _zend_get_inf(void) /* {{{ */
+ 	return INFINITY;
+ #elif HAVE_HUGE_VAL_INF
+ 	return HUGE_VAL;
+-#elif defined(__i386__) || defined(_X86_) || defined(ALPHA) || defined(_ALPHA) || defined(__alpha)
++#elif defined(__i386__) || defined(_X86_) || defined(ALPHA) || defined(_ALPHA) || defined(__alpha) || defined(__sw_64__)
+ # define _zend_DOUBLE_INFINITY_HIGH       0x7ff00000
+ 	double val = 0.0;
+ 	((uint32_t*)&val)[1] = _zend_DOUBLE_INFINITY_HIGH;
+@@ -468,7 +468,7 @@ static zend_always_inline double _zend_get_nan(void) /* {{{ */
+ 	return NAN;
+ #elif HAVE_HUGE_VAL_NAN
+ 	return HUGE_VAL + -HUGE_VAL;
+-#elif defined(__i386__) || defined(_X86_) || defined(ALPHA) || defined(_ALPHA) || defined(__alpha)
++#elif defined(__i386__) || defined(_X86_) || defined(ALPHA) || defined(_ALPHA) || defined(__alpha) || defined(__sw_64__)
+ # define _zend_DOUBLE_QUIET_NAN_HIGH      0xfff80000
+ 	double val = 0.0;
+ 	((uint32_t*)&val)[1] = _zend_DOUBLE_QUIET_NAN_HIGH;
+diff --git a/ext/hash/sha3/generic32lc/brg_endian.h b/ext/hash/sha3/generic32lc/brg_endian.h
+index 7226eb3b..b5fca4c9 100644
+--- a/ext/hash/sha3/generic32lc/brg_endian.h
++++ b/ext/hash/sha3/generic32lc/brg_endian.h
+@@ -111,7 +111,7 @@
+       defined( __i386__ )  || defined( _M_I86 )  || defined( _M_IX86 )    || \
+       defined( __OS2__ )   || defined( sun386 )  || defined( __TURBOC__ ) || \
+       defined( vax )       || defined( vms )     || defined( VMS )        || \
+-      defined( __VMS )     || defined( _M_X64 )
++      defined( __VMS )     || defined( _M_X64 )  || defined( __sw_64__ )
+ #  define PLATFORM_BYTE_ORDER IS_LITTLE_ENDIAN
+ 
+ #elif defined( AMIGA )   || defined( applec )    || defined( __AS400__ )  || \
+diff --git a/ext/hash/sha3/generic64lc/brg_endian.h b/ext/hash/sha3/generic64lc/brg_endian.h
+index 7226eb3b..21188077 100644
+--- a/ext/hash/sha3/generic64lc/brg_endian.h
++++ b/ext/hash/sha3/generic64lc/brg_endian.h
+@@ -111,7 +111,7 @@
+       defined( __i386__ )  || defined( _M_I86 )  || defined( _M_IX86 )    || \
+       defined( __OS2__ )   || defined( sun386 )  || defined( __TURBOC__ ) || \
+       defined( vax )       || defined( vms )     || defined( VMS )        || \
+-      defined( __VMS )     || defined( _M_X64 )
++      defined( __VMS )     || defined( _M_X64 )  || defined( __sw_64__)
+ #  define PLATFORM_BYTE_ORDER IS_LITTLE_ENDIAN
+ 
+ #elif defined( AMIGA )   || defined( applec )    || defined( __AS400__ )  || \
+diff --git a/ext/standard/crypt_blowfish.c b/ext/standard/crypt_blowfish.c
+index c1f945f2..ab72dcb0 100644
+--- a/ext/standard/crypt_blowfish.c
++++ b/ext/standard/crypt_blowfish.c
+@@ -56,7 +56,7 @@
+ #ifdef __i386__
+ #define BF_ASM				0
+ #define BF_SCALE			1
+-#elif defined(__x86_64__) || defined(__alpha__) || defined(__hppa__)
++#elif defined(__x86_64__) || defined(__alpha__) || defined(__hppa__) || defined(__sw_64__)
+ #define BF_ASM				0
+ #define BF_SCALE			1
+ #else

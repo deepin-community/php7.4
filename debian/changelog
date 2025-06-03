@@ -1,3 +1,9 @@
+php7.4 (7.4.21-2+deb11u1deepin1) unstable; urgency=medium
+
+  * feat: add sw64 support.
+
+ -- hudeng <hudeng@deepin.org>  Tue, 03 Jun 2025 21:23:58 +0800
+
 php7.4 (7.4.21-2+deb11u1) UNRELEASED; urgency=medium
 
   * update
