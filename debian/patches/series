@@ -44,3 +44,4 @@
 0044-In-phpize-also-copy-config.guess-config.sub-ltmain.s.patch
 0045-Don-t-use-hrtimers-on-GNU-Hurd.patch
 Add-openssl3-icu71-support.patch
+0001-deepin-sw_64-support.diff
